@@ -1,0 +1,129 @@
+# SYNTAX TEST "Packages/OpenFGA/OpenFGA.sublime-syntax"
+
+# Comments
+
+# line comment
+# <- comment.line.number-sign.openfga punctuation.definition.comment.openfga
+
+define repo_admin: [user, organization#member] # Foo#bar
+#                                              ^ punctuation.definition.comment.openfga
+#                                                ^^^^^^^ comment.line.number-sign.openfga
+
+ model
+#^^^^^ keyword.declaration.model.openfga
+  schema 1.1
+# ^^^^^^ keyword.declaration.schema.openfga
+#        ^ constant.numeric.base.version.major.openfga
+#         ^ punctuation.separator.sequence.version.openfga
+#          ^ constant.numeric.base.version.minor.openfga
+#        ^^^ meta.schema.version.openfga
+#^^^^^^^^^^^ meta.schema.openfga
+
+# Type User
+
+ type user
+#^^^^ storage.type keyword.declaration.type.openfga
+#.    ^^^^ entity.name.type.openfga
+#^^^^^^^^^ meta.type.openfga
+
+# Type Domain
+
+ type domain
+#^^^^ storage.type keyword.declaration.type.openfga
+#     ^^^^^^ entity.name.type.openfga
+  relations
+# ^^^^^^^^^ keyword.declaration.relations.openfga
+# ^^^^^^^^^ meta.type.relation.openfga
+
+    define member: [user, team#member]
+#   ^^^^^^ keyword.declaration.define.openfga
+#          ^^^^^^ constant.other.keyword.openfga
+#                ^ punctuation.separator.key-value.openfga
+#                  ^ punctuation.section.group.begin.openfga
+#                   ^^^^  entity.name.attribute-name.openfga
+#                       ^ punctuation.separator.continuation.openfga
+#                         ^^^^ entity.name.attribute-name.openfga
+#                             ^ punctuation.separator.sequence.openfga
+#                              ^^^^^^ entity.name.other.attribute-name.openfga
+#                         ^^^^^^^^^^^ meta.sequence.openfga
+#                                    ^ punctuation.section.group.end.openfga
+#                  ^^^^^^^^^^^^^^^^^^^ meta.group.openfga
+#   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.scope.openfga
+#   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.type.relation.openfga
+
+type team
+  relations
+    define member: [user, user:*, team#member]
+#                         ^^^^ entity.name.attribute-name.openfga
+#                             ^ punctuation.definition.constant.openfga
+#                              ^ constant.other.wildcard.asterisk.openfga
+
+# Type Folder
+
+type folder
+  relations
+    define can_share: writer
+    define owner: [user, domain#member] or owner from parent_folder [user]
+    define parent_folder: [folder]
+    define viewer: [user, domain#member] or writer or viewer from parent_folder
+    define writer: [user, domain#member] or owner or writer from parent_folder
+#                                        ^^ keyword.operator.logical.or.openfga
+#                                           ^^^^^ entity.name.label.openfga
+#                                                           ^^^^ keyword.operator.logical.from.openfga
+
+# Type Document
+
+type document
+# <- storage.type keyword.declaration.type.openfga
+#    @@@@@@@@ definition
+
+  relations
+# ^ meta.type.relation.openfga
+
+    define can_share: writer
+#   ^ meta.type.relation.openfga
+
+    define owner: [user, domain#member] or owner from parent_folder # Foo#bar
+    define parent_folder: [folder]
+    define viewer: [user, domain#member] or writer or viewer from parent_folder
+    define writer: [user, domain#member] or owner or writer from parent_folder
+    define writer or writer: [user, domain#member] or owner
+    define writer from parent_folder
+#          ^^^^^^ entity.name.label.openfga
+#                      ^^^^^^^^^^^^^ entity.name.label.openfga
+
+    define writer: owner
+#          @@@@@@ global-definition
+
+
+# Union Operator
+# https://openfga.dev/docs/configuration-language#the-union-operator
+
+type document
+  relations
+    define viewer: [user] or editor
+#                         ^^ keyword.operator.logical.or.openfga
+
+# Intersection Operator
+# https://openfga.dev/docs/configuration-language#the-intersection-operator
+
+type document
+  relations
+    define viewer: authorized_user and editor
+#                                  ^^^ keyword.operator.logical.and.openfga
+
+# Exclusion Operator
+# https://openfga.dev/docs/configuration-language#the-exclusion-operator
+
+type document
+  relations
+    define viewer: [user] but not blocked
+#                         ^^^^^^^ keyword.operator.logical.butnot.openfga
+
+# Tuple to User Set
+# https://openfga.dev/docs/configuration-language#referencing-relations-on-related-objects
+
+type document
+  relations
+    define viewer: [user] or viewer from parent_folder
+#                                   ^^^^ keyword.operator.logical.from.openfga

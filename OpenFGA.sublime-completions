@@ -1,0 +1,26 @@
+{
+	"scope": "source.openfga",
+	"completions": [
+		{
+			"trigger": "model",
+			"annotation": "schema",
+			"contents": "model\n  schema ${1:number}",
+			"kind": "snippet",
+			"details": "A directive <code>schema</code> definition"
+		},
+		{
+			"trigger": "type",
+			"annotation": "type user",
+			"contents": "type ${1:object}",
+			"kind": "snippet",
+			"details": "A type <code>user</code> definition"
+		},
+		{
+			"trigger": "type",
+			"annotation": "type relations",
+			"contents": "type ${1:object}\n  relations\n    define ${2:relation}",
+			"kind": "snippet",
+			"details": "A type <code>relation</code> definition"
+		}
+	]
+}

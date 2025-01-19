@@ -1,0 +1,264 @@
+%YAML 1.2
+---
+# See http://www.sublimetext.com/docs/syntax.html
+# See https://github.com/SublimeText/PackageDev/blob/master/plugins/lib/scope_data/data.py
+# See https://openfga.dev/docs/configuration-language
+name: OpenFGA
+version: 2
+scope: source.openfga
+file_extensions:
+  - fga
+
+### Variables ###
+variables:
+
+  define_word: \bdefine\b
+  model_word: \bmodel\b
+  relations_word: \brelations\b
+  schema_word: \bschema\b
+  type_word: \btype\b
+
+  reserved_word: |-
+    (?x: 
+        {{define_word}} | {{model_word}} | {{relations_word}}
+      | {{schema_word}} | {{type_word}})
+
+  anyident: (?:[-_[:alnum:]]*)
+  ident: (?:(?!{{reserved_word}}){{anyident}})
+
+  or_operator: \bor\b
+  and_operator: \band\b
+  but_not_operator: \b(but)\s(not)\b
+  from_operator: \bfrom\b
+
+
+### Contexts ###
+contexts:
+
+  prototype:
+    - include: comments
+
+  main:
+    - include: user-type
+    - include: relations-type
+    - include: model
+
+    # To highlight out of type
+    - include: operator
+    - include: define-array
+
+### Comments ###
+# Code from YAML.sublime-syntax
+  comments:
+    - match: |-
+        (?x)
+        (?: ^ [ \t]* | [ \t]+ )
+        (?=\#)
+      push: comment-begin
+
+  comment-begin:
+    - meta_include_prototype: false
+    - match: \#
+      scope: punctuation.definition.comment.line.number-sign.openfga
+      set: comment-body
+
+  comment-body:
+    - meta_include_prototype: false
+    - meta_scope: comment.line.number-sign.openfga
+    - match: (?=[\n])
+      pop: 1
+
+### Keyword ###
+  keyword:
+    - match: ({{define_word}})
+      scope: keyword.declaration.define.openfga
+
+    - match: ({{model_word}})
+      scope: keyword.declaration.model.openfga
+
+    - match: ({{relations_word}})
+      scope: keyword.declaration.relations.openfga
+
+    - match: ({{schema_word}})
+      scope: keyword.declaration.schema.openfga
+
+### Storage ###
+  storage:
+    - match: ({{type_word}})
+      scope: storage.type keyword.declaration.type.openfga
+
+### Operator ###
+# https://openfga.dev/docs/configuration-language#the-union-operator
+  operator:
+    - match: ({{or_operator}})
+      scope: keyword.operator.logical.or.openfga
+
+    - match: ({{and_operator}})
+      scope: keyword.operator.logical.and.openfga
+
+    - match: ({{but_not_operator}})
+      scope: keyword.operator.logical.butnot.openfga
+
+    - match: ({{from_operator}})
+      scope: keyword.operator.logical.from.openfga
+
+  relations-operators:
+    - include: exclusion-operator
+    - include: intersection-operator
+    - include: tuple-to-userset-operator
+    - include: union-operator
+
+  exclusion-operator:
+    - match: \s({{but_not_operator}})\s
+      captures:
+        1: keyword.operator.logical.butnot.openfga
+    - match: (?=\s*[\n])
+      pop: 1
+
+  intersection-operator:
+    - match: \s({{and_operator}})\s
+      captures:
+        1: keyword.operator.logical.and.openfga
+    - match: (?=\s*[\n])
+      pop: 1
+
+  tuple-to-userset-operator:
+    - match: \s({{from_operator}})\s
+      captures:
+        1: keyword.operator.logical.from.openfga
+    - match: (?=\s*[\n])
+      pop: 1
+
+  union-operator:
+    - match: \s({{or_operator}})\s
+      captures:
+        1: keyword.operator.logical.or.openfga
+    - match: (?=\s*[\n])
+      pop: 1
+
+### Schema ###
+# https://openfga.dev/docs/configuration-language#what-does-the-configuration-language-look-like
+  model:
+    - match: ({{model_word}})
+      captures:
+        1: keyword.declaration.model.openfga
+      set:
+        - meta_scope: meta.schema.openfga
+        - include: schema
+        - include: schema-version
+
+  schema:
+    - match: ({{schema_word}})
+      captures:
+        1: keyword.declaration.schema.openfga
+
+  schema-version:
+    - match: (\d+)(\.)(\d+)
+      captures:
+        1: constant.numeric.base.version.major.openfga
+        2: punctuation.separator.sequence.version.openfga
+        3: constant.numeric.base.version.minor.openfga
+      set:
+        - meta_scope: meta.schema.version.openfga
+        - match: (?=\s*[\n])
+          pop: 1
+
+### Types ###
+  user-type:
+    - include: user-type-body
+
+  user-type-body:
+    - match: ({{type_word}})
+      captures:
+        1: storage.type keyword.declaration.type.openfga
+      set:
+        - meta_scope: meta.type.user.openfga
+        - match: ({{ident}})
+          captures:
+            1: entity.name.type.openfga
+        - match: (?=[\n])
+          pop: 1
+
+  relations-type:
+    - include: user-type-body
+    - include: relations
+    - include: define
+
+  type-bound-public-access:
+    - match: ({{ident}})(\:)(\*)
+      captures:
+        1: entity.name.attribute-name.openfga
+        2: punctuation.definition.constant.openfga
+        3: constant.other.wildcard.asterisk.openfga
+
+  type-label:
+    - match: ({{ident}})(?=[\s\n,\[\]])
+      captures:
+        # Using label because it does not highlight color in Mariana,
+        # Monokai, Breaker and Sixteen.
+        # Look more like OpenFGA docs without customization.
+        1: entity.name.label.openfga
+
+  type-member:
+    - match: ({{ident}})(?=[\s\n,\[\]])
+      captures:
+        1: entity.name.attribute-name.openfga
+
+  type-key:
+    - match: ({{ident}})(\:)
+      captures:
+        1: constant.other.keyword.openfga
+        2: punctuation.separator.key-value.openfga
+
+  # E.g. team#member
+  type-relation:
+    - match: \b({{ident}})(#)({{ident}})\b(?!\s*\w|\w*#)
+      captures:
+        1: meta.sequence.openfga entity.name.attribute-name.openfga
+        2: meta.sequence.openfga punctuation.separator.sequence.openfga
+        3: meta.sequence.openfga entity.name.other.attribute-name.openfga
+
+### Relations ###
+# https://openfga.dev/docs/configuration-language#direct-relationship-type-restrictions
+  relations:
+    - match: ({{relations_word}})
+      captures:
+        1: keyword.declaration.relations.openfga
+      set:
+        - meta_scope: meta.type.relation.openfga
+        - match: \n
+          pop: 1
+
+  define:
+    - match: ({{define_word}})
+      captures:
+        1: keyword.declaration.define.openfga
+      set:
+        - meta_scope: meta.type.relation.openfga meta.scope.openfga
+        - include: comments
+        - include: type-key
+        - include: type-label
+        - include: relations-operators
+        - include: define-array
+        - match: (?=[\n])
+          pop: 1
+
+  define-array:
+    - match: \[
+      scope: punctuation.section.group.begin.openfga
+      push:
+        - meta_scope: meta.group.openfga
+        - match: '\]'
+          scope: punctuation.section.group.end.openfga
+          pop: 1
+          push:
+            - include: comments
+            - include: type-label
+            - include: relations-operators
+        - include: type-bound-public-access
+        - include: type-member
+        - include: type-relation
+        - match: ','
+          scope: punctuation.separator.continuation.openfga
+        - match: \S
+          scope: invalid.illegal.openfga
