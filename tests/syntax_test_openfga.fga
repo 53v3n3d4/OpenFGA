@@ -3,7 +3,7 @@
 # Comments
 
 # line comment
-# <- comment.line.number-sign.openfga punctuation.definition.comment.openfga
+# <- punctuation.definition.comment.line.number-sign.openfga
 
 define repo_admin: [user, organization#member] # Foo#bar
 #                                              ^ punctuation.definition.comment.line.number-sign.openfga
@@ -24,7 +24,7 @@ define repo_admin: [user, organization#member] # Foo#bar
  type user
 #^^^^ storage.type keyword.declaration.type.openfga
 #     ^^^^ entity.name.type.openfga
-#^^^^^^^^^ meta.type.openfga
+#^^^^^^^^^ meta.type.user.openfga
 
 # Type Domain
 
@@ -75,7 +75,6 @@ type folder
 
 type document
 # <- storage.type keyword.declaration.type.openfga
-#    @@@@@@@@ definition
 
   relations
 # ^ meta.type.relation.openfga
@@ -93,7 +92,6 @@ type document
 #                      ^^^^^^^^^^^^^ entity.name.label.openfga
 
     define writer: owner
-#          @@@@@@ definition
 
 
 # Union Operator
