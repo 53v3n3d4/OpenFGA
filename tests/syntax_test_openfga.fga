@@ -6,7 +6,7 @@
 # <- comment.line.number-sign.openfga punctuation.definition.comment.openfga
 
 define repo_admin: [user, organization#member] # Foo#bar
-#                                              ^ punctuation.definition.comment.openfga
+#                                              ^ punctuation.definition.comment.line.number-sign.openfga
 #                                                ^^^^^^^ comment.line.number-sign.openfga
 
  model
@@ -17,13 +17,13 @@ define repo_admin: [user, organization#member] # Foo#bar
 #         ^ punctuation.separator.sequence.version.openfga
 #          ^ constant.numeric.base.version.minor.openfga
 #        ^^^ meta.schema.version.openfga
-#^^^^^^^^^^^ meta.schema.openfga
+# ^^^^^^^^^^ meta.schema.openfga
 
 # Type User
 
  type user
 #^^^^ storage.type keyword.declaration.type.openfga
-#.    ^^^^ entity.name.type.openfga
+#     ^^^^ entity.name.type.openfga
 #^^^^^^^^^ meta.type.openfga
 
 # Type Domain
@@ -47,7 +47,7 @@ define repo_admin: [user, organization#member] # Foo#bar
 #                              ^^^^^^ entity.name.other.attribute-name.openfga
 #                         ^^^^^^^^^^^ meta.sequence.openfga
 #                                    ^ punctuation.section.group.end.openfga
-#                  ^^^^^^^^^^^^^^^^^^^ meta.group.openfga
+#                  ^^^^^^^^^^^^^^^^^^ meta.group.openfga
 #   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.scope.openfga
 #   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.type.relation.openfga
 
@@ -93,7 +93,7 @@ type document
 #                      ^^^^^^^^^^^^^ entity.name.label.openfga
 
     define writer: owner
-#          @@@@@@ global-definition
+#          @@@@@@ definition
 
 
 # Union Operator
