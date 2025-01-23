@@ -18,15 +18,20 @@ jobs:
   syntax_tests:
     name: Syntax Tests (${{ matrix.build }})
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     timeout-minutes: 15
     strategy:
       matrix:
         include:
           - build: 'latest'
             # packages: master
-
+          - build: stable
+            # packages: binary
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: SublimeText/syntax-test-action@v2
         with:
           build: ${{ matrix.build }}
