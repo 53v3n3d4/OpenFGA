@@ -185,15 +185,12 @@ contexts:
 
 ### Types ###
   types:
-    - include: user-type-body
+    - include: user-type
     - include: extend-type
     - include: relations
     - include: define
 
   user-type:
-    - include: user-type-body
-
-  user-type-body:
     - match: ({{type_word}})
       captures:
         1: storage.type keyword.declaration.type.openfga

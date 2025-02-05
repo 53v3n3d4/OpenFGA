@@ -3,7 +3,9 @@
 <dict>
 	<key>scope</key>
 	<string>
-		constant.other.keyword.openfga
+		constant.other.keyword.openfga,
+		keyword.declaration.schema.openfga,
+		entity.name.module.openfga
 	</string>
 	<key>settings</key>
 	<dict>
