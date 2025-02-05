@@ -19,6 +19,11 @@ define repo_admin: [user, organization#member] # Foo#bar
 #        ^^^ meta.schema.version.openfga
 # ^^^^^^^^^^ meta.schema.openfga
 
+ module core
+#^^^^^^ keyword.declaration.module.openfga
+#       ^^^^ entity.name.module.openfga
+#^^^^^^^^^^^^ meta.module.openfga
+
 # Type User
 
  type user
@@ -93,6 +98,14 @@ type document
 
     define writer: owner
 
+# Extend Type Document
+
+extend type organization
+  relations
+    define can_create_project: admin
+# <- storage.type keyword.declaration.extend.openfga
+#      ^ storage.type keyword.declaration.type.openfga
+#           ^ entity.name.type.openfga
 
 # Union Operator
 # https://openfga.dev/docs/configuration-language#the-union-operator

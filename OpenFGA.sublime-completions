@@ -9,6 +9,13 @@
 			"details": "A directive <code>schema</code> definition"
 		},
 		{
+			"trigger": "module",
+			"annotation": "modular models",
+			"contents": "module ${1:types}",
+			"kind": "snippet",
+			"details": "A modular <code>model</code> definition"
+		},
+		{
 			"trigger": "type",
 			"annotation": "type user",
 			"contents": "type ${1:object}",
@@ -21,6 +28,13 @@
 			"contents": "type ${1:object}\n  relations\n    define ${2:relation}",
 			"kind": "snippet",
 			"details": "A type <code>relation</code> definition"
+		},
+		{
+			"trigger": "extend",
+			"annotation": "extend type relations",
+			"contents": "extend type ${1:object}\n  relations\n    define ${2:relation}",
+			"kind": "snippet",
+			"details": "A extend type <code>relation</code> definition"
 		}
 	]
 }

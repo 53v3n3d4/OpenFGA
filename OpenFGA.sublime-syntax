@@ -13,7 +13,9 @@ file_extensions:
 variables:
 
   define_word: \bdefine\b
+  extend_word: \bextend\b
   model_word: \bmodel\b
+  module_word: \bmodule\b
   relations_word: \brelations\b
   schema_word: \bschema\b
   type_word: \btype\b
@@ -39,13 +41,14 @@ contexts:
     - include: comments
 
   main:
-    - include: user-type
-    - include: relations-type
     - include: model
+    - include: module
+    - include: types
 
     # To highlight out of type
     - include: operator
     - include: define-array
+    - include: keyword
 
 ### Comments ###
 # Code from YAML.sublime-syntax
@@ -81,6 +84,9 @@ contexts:
 
     - match: ({{schema_word}})
       scope: keyword.declaration.schema.openfga
+
+    - match: ({{extend_word}})
+      scope: keyword.declaration.extend.openfga
 
 ### Storage ###
   storage:
@@ -163,7 +169,27 @@ contexts:
         - match: (?=\s*[\n])
           pop: 1
 
+### Module ###
+# https://openfga.dev/docs/modeling/modular-models
+  module:
+    - match: ({{module_word}})
+      captures:
+        1: keyword.declaration.module.openfga
+      set:
+        - meta_scope: meta.module.openfga
+        - match: ({{ident}})
+          captures:
+            1: entity.name.module.openfga
+        - match: (?=[\n])
+          pop: 1
+
 ### Types ###
+  types:
+    - include: user-type-body
+    - include: extend-type
+    - include: relations
+    - include: define
+
   user-type:
     - include: user-type-body
 
@@ -179,10 +205,18 @@ contexts:
         - match: (?=[\n])
           pop: 1
 
-  relations-type:
-    - include: user-type-body
-    - include: relations
-    - include: define
+  extend-type:
+    - match: ({{extend_word}})(\s)({{type_word}})
+      captures:
+        1: storage.type keyword.declaration.extend.openfga
+        3: storage.type keyword.declaration.type.openfga
+      set:
+        - meta_scope: meta.type.user.openfga
+        - match: ({{ident}})
+          captures:
+            1: entity.name.type.openfga
+        - match: (?=[\n])
+          pop: 1
 
   type-bound-public-access:
     - match: ({{ident}})(\:)(\*)
