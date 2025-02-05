@@ -22,7 +22,7 @@ define repo_admin: [user, organization#member] # Foo#bar
  module core
 #^^^^^^ keyword.declaration.module.openfga
 #       ^^^^ entity.name.module.openfga
-#^^^^^^^^^^^^ meta.module.openfga
+#^^^^^^^^^^^ meta.module.openfga
 
 # Type User
 
