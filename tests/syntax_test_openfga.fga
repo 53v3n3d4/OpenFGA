@@ -101,11 +101,12 @@ type document
 # Extend Type Document
 
 extend type organization
-  relations
-    define can_create_project: admin
 # <- storage.type keyword.declaration.extend.openfga
 #      ^ storage.type keyword.declaration.type.openfga
 #           ^ entity.name.type.openfga
+
+  relations
+    define can_create_project: admin
 
 # Union Operator
 # https://openfga.dev/docs/configuration-language#the-union-operator
