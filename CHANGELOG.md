@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.1.1] - 2025
+## [0.1.1] - 2025-02-06
 - Remove github workflows CI from release
 - Remove tests from release
 - Add syntax, auto completions and tests for Modular Models
