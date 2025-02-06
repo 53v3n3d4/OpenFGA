@@ -1,5 +1,7 @@
 # OpenFGA
 
+<a href="https://github.com/53v3n3d4/OpenFGA/actions/workflows/ci.yml"><img src="https://github.com/53v3n3d4/OpenFGA/actions/workflows/ci.yml/badge.svg" alt="build status"></a>
+
 [OpenFGA](https://openfga.dev) syntax for Sublime Text.
 
 ![OpenFGA syntax for Sublime Text](assets/screenshot.png)
