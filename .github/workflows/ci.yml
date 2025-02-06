@@ -1,4 +1,4 @@
-name: GitHub CI Syntax Tests
+name: CI
 
 on:
   push:
@@ -16,10 +16,12 @@ on:
 
 jobs:
   syntax_tests:
+
     name: Syntax Tests (${{ matrix.build }})
     runs-on: ubuntu-latest
     permissions:
-      id-token: write
+      # Passing one of default ones.
+      contents: read
     timeout-minutes: 15
     strategy:
       matrix:
@@ -28,6 +30,7 @@ jobs:
             # packages: master
           - build: stable
             # packages: binary
+
     steps:
       - uses: actions/checkout@v4
         with:
